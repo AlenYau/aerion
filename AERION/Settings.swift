@@ -19,6 +19,10 @@ final class Preferences {
     var menuBarStyle: MenuBarStyle {
         didSet { defaults.set(menuBarStyle.rawValue, forKey: "menuBarStyle"); onChange?() }
     }
+    /// Live keeps the strip at the update interval; low power lets it follow the 30 s background cadence.
+    var stripLiveUpdates: Bool {
+        didSet { defaults.set(stripLiveUpdates, forKey: "stripLiveUpdates"); onChange?() }
+    }
     var stripFields: [StripField] {
         didSet { defaults.set(stripFields.map(\.rawValue), forKey: "stripFields") }
     }
@@ -38,6 +42,7 @@ final class Preferences {
         self.systemPage = defaults.string(forKey: "systemPage").flatMap(SDPage.init(rawValue:)) ?? .elec
         self.showDetails = defaults.object(forKey: "showDetails") as? Bool ?? true
         self.menuBarStyle = defaults.string(forKey: "menuBarStyle").flatMap(MenuBarStyle.init(rawValue:)) ?? .strip
+        self.stripLiveUpdates = defaults.object(forKey: "stripLiveUpdates") as? Bool ?? true
         let fields = (defaults.stringArray(forKey: "stripFields") ?? []).compactMap(StripField.init(rawValue:))
         self.stripFields = fields.isEmpty ? StripField.defaults : Array(fields.prefix(StripField.maximum))
     }
@@ -78,6 +83,11 @@ struct PreferencesView: View {
             }
             .pickerStyle(.segmented)
             Toggle("Show auxiliary readings", isOn: $preferences.showDetails)
+            Picker("Menu bar strip refresh", selection: $preferences.stripLiveUpdates) {
+                Text("Live").tag(true)
+                Text("Low Power (30 s)").tag(false)
+            }
+            .pickerStyle(.segmented)
             Toggle("Keep floating monitor above windows", isOn: $preferences.floatingOnTop)
             Toggle("Launch at login", isOn: Binding(get: { preferences.loginRegistered },
                                                      set: { preferences.setLaunchAtLogin($0) }))

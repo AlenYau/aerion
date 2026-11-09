@@ -148,8 +148,10 @@ final class MenuBar: NSObject, NSPopoverDelegate {
         return image
     }()
     var onVisibilityChange: (() -> Void)?
-    /// The strip shows live data, so it keeps the sampler at the foreground cadence.
-    var isVisible: Bool { popover.isShown || preferences.menuBarStyle == .strip }
+    /// In live mode the strip keeps the sampler at the foreground cadence.
+    var isVisible: Bool {
+        popover.isShown || (preferences.menuBarStyle == .strip && preferences.stripLiveUpdates)
+    }
 
     init(sampler: SamplingManager, preferences: Preferences, windows: WindowManager) {
         self.sampler = sampler
@@ -249,6 +251,13 @@ final class MenuBar: NSObject, NSPopoverDelegate {
         for option in MenuBarStyle.allCases {
             let row = entry(option.title) { [preferences] in preferences.menuBarStyle = option }
             row.state = preferences.menuBarStyle == option ? .on : .off
+            style.addItem(row)
+        }
+        style.addItem(.separator())
+        for (title, live) in [("Live Refresh (uses more power)", true), ("Low Power Refresh (every 30 s)", false)] {
+            let row = entry(title) { [preferences] in preferences.stripLiveUpdates = live }
+            row.state = preferences.stripLiveUpdates == live ? .on : .off
+            row.isEnabled = preferences.menuBarStyle == .strip
             style.addItem(row)
         }
         menu.addItem(submenu("Menu Bar Style", style))
