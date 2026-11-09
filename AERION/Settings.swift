@@ -16,6 +16,12 @@ final class Preferences {
     var scale: Double { didSet { defaults.set(scale, forKey: "scale"); onChange?() } }
     var systemPage: SDPage { didSet { defaults.set(systemPage.rawValue, forKey: "systemPage") } }
     var showDetails: Bool { didSet { defaults.set(showDetails, forKey: "showDetails") } }
+    var menuBarStyle: MenuBarStyle {
+        didSet { defaults.set(menuBarStyle.rawValue, forKey: "menuBarStyle"); onChange?() }
+    }
+    var stripFields: [StripField] {
+        didSet { defaults.set(stripFields.map(\.rawValue), forKey: "stripFields") }
+    }
 
     private(set) var loginStatus = SMAppService.Status.notRegistered
     private(set) var loginError: String?
@@ -31,6 +37,9 @@ final class Preferences {
         self.floatingOnTop = defaults.object(forKey: "floatingOnTop") as? Bool ?? true
         self.systemPage = defaults.string(forKey: "systemPage").flatMap(SDPage.init(rawValue:)) ?? .elec
         self.showDetails = defaults.object(forKey: "showDetails") as? Bool ?? true
+        self.menuBarStyle = defaults.string(forKey: "menuBarStyle").flatMap(MenuBarStyle.init(rawValue:)) ?? .strip
+        let fields = (defaults.stringArray(forKey: "stripFields") ?? []).compactMap(StripField.init(rawValue:))
+        self.stripFields = fields.isEmpty ? StripField.defaults : Array(fields.prefix(StripField.maximum))
     }
 
     var loginRegistered: Bool { loginStatus == .enabled || loginStatus == .requiresApproval }
