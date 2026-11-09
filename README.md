@@ -33,7 +33,7 @@ To keep the locally built app, move it to **Applications**. The project is confi
 | **⌘5** | Switch the main window between E/WD and SD |
 | **⌘,** | Open Settings |
 
-The menu bar icon opens a compact monitor and provides shortcuts to both displays. Resize either ECAM window from its edge to scale the diagrams proportionally. Use the six buttons at the bottom of the SD to select a page. AERION remembers the last page.
+Click the menu bar item to open a compact monitor with shortcuts to both displays. Right-click it (or Control-click) to open a window, switch between the icon and the FCU strip, choose up to three strip readouts (CPU, MEM, BAT, DSK, NET↓, NET↑, THM), or quit. Resize either ECAM window from its edge to scale the diagrams proportionally. Use the six buttons at the bottom of the SD to select a page. AERION remembers the last page.
 
 | SD page | Readings |
 | --- | --- |
@@ -50,6 +50,7 @@ Open **AERION → Settings** with **⌘,**.
 
 - **Update interval** sets foreground sampling to **0.5**, **2**, or **5 seconds**. AERION falls back to a 30-second sampling interval when all monitor surfaces are hidden and pauses sampling during sleep.
 - **Display scale** offers **85%**, **100%**, and **115%** presets.
+- **Menu bar strip refresh** chooses **Live** (follows the update interval) or **Low Power** (refreshes every 30 seconds when no other monitor is open).
 - **Show auxiliary readings** toggles extra details on the dashboard and compact displays.
 - **Keep floating monitor above windows** controls the floating window level.
 - **Launch at login** registers AERION with macOS. If approval is required, use **Approve in System Settings** from the app.
